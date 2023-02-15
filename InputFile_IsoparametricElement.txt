@@ -1,0 +1,61 @@
+FINISH
+
+/CLEAR
+/TITLE,Isoparametric Element
+
+L       = 10
+STRETCH = .5
+YOUNG   = 210000
+POISSON = 0.3
+thickness=1
+
+EL_1  = 1
+MAT_1 = 1
+
+
+/PREP7
+
+!ISOPARAMETRIC ELEMENT
+ET,EL_1,USER300
+USRDOF,DEFINE,UX,UY
+USRELEM,4,2,QUAD,3,1000,1000,0,4
+R,EL_1,YOUNG,POISSON,thickness
+Keyopt,EL_1,1,0                  !KeyOpt(1)=0 > Palne Stress, KeyOpt(1)=1 > Plane Strain
+
+
+
+!NATIVE ANSYS ELEMENT
+!ET,EL_1,plane182
+!MP,EX,MAT_1,YOUNG
+!MP,NUXY,MAT_1,POISSON
+!R,EL_1,thickness
+!Keyopt,EL_1,3,3
+
+N,101, 2*L, 0
+N,102, 3*L, 0
+N,103, 3*L, L
+N,104, 2*L, L
+N,105, 4*L, 0
+N,106, 4*L, L
+
+TYPE,EL_1
+MAT,MAT_1
+
+
+E,101,102,103,104
+E,102,105,106,103
+FINISH
+
+/SOLU
+NSEL,S,LOC,X,2*L
+D,ALL,UY,0
+D,ALL,UX,0
+NSEL,ALL
+
+
+NSEL,S,LOC,X,4*L
+D,ALL,UX,STRETCH 
+NSEL,ALL
+
+SOLVE
+
